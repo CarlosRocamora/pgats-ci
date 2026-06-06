@@ -6,3 +6,6 @@ reports
 /blob-report/
 /playwright/.cache/
 results.xml
+actions-runner/
+*.zip
+*.tar.gz
