@@ -3,6 +3,7 @@
 # A pipeline só será executada quando disparada manualmente pela UI
 workflow:
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
       when: always
     - when: never
