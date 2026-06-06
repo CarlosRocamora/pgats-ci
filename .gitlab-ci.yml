@@ -1,0 +1,17 @@
+workflow:
+  name: "Execução Manual"
+
+image: node:24
+
+stages:
+  - e2e
+
+e2e-tests:
+  stage: e2e
+
+  script:
+    - npm install -g yarn
+    - yarn
+    - yarn run e2e
+
+  when: manual
