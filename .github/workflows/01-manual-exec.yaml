@@ -7,7 +7,6 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
 
-    # Permissão para escrever no repositório (necessária para o deploy)
     permissions:
       contents: write
 
@@ -32,9 +31,18 @@ jobs:
 
       # Publicar o relatório HTML no GitHub Pages
       - name: Deploy do relatório no GitHub Pages
-        if: always()   # publica o relatório mesmo se houver falhas
+        if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./playwright-report   # pasta gerada pelo Playwright
-          destination_dir: relatorio-e2e     # subpasta no Pages (opcional)
+          publish_dir: ./playwright-report
+          destination_dir: relatorio-e2e
+
+      # Mostrar o link do relatório nos logs da execução
+      - name: Mostrar link do relatório
+        if: always()
+        run: |
+          echo "=============================================="
+          echo "📊 Relatório disponível em:"
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/relatorio-e2e/"
+          echo "=============================================="
