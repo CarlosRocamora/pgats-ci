@@ -12,7 +12,7 @@ e2e-tests:
   stage: test
   image: node:24
   script:
-    - command -v yarn || npm install -g yarn   # Instala Yarn apenas se ausente
+    - command -v yarn || npm install -g yarn   
     - yarn install
     - yarn playwright install --with-deps
     - yarn run e2e

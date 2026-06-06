@@ -1,48 +1,40 @@
-# CI de Nível 01 - Disparo Manual através de clique
-
-# nome da pipeline
 name: 'Execução Manual'
 
-# gatilhos / triggers - regras de disparo
-# gatilho manual = workflow_dispatch
-# gatilho agendado = schedule
-# gatilho por conclusão de outra pipeline = workflow_run
-
 on:
-    workflow_dispatch:
-
-# tarefas dentro da pipeline = jobs
+  workflow_dispatch:
 
 jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
 
-    # nome do job    
-    e2e-tests:
-        # maquina onde o job vai rodar
-        runs-on: ubuntu-latest
+    # Permissão para escrever no repositório (necessária para o deploy)
+    permissions:
+      contents: write
 
-        # passos do job
-        steps:
-            # clone do projeto
-            - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-            # instalação do node
-            - uses: actions/setup-node@v4
-              with:
-                node-version: 24.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
 
-            # instalação do Yarn
-            - name: Instalando Yarn
-              run: npm install -g yarn
+      - name: Instalando Yarn
+        run: npm install -g yarn
 
-            # instalação das dependências
-            - name: Instalando dependências
-              run: yarn
+      - name: Instalando dependências
+        run: yarn
 
-            # instalação dos Browsers do Playwright
-            - name: Instalando Browsers do Playwright
-              run: yarn playwright install
-            
-            # executar os testes e2e
-            - name: Executando testes e2e
-              run: yarn run e2e
-        
+      - name: Instalando Browsers do Playwright
+        run: yarn playwright install
+
+      - name: Executando testes e2e
+        run: yarn run e2e
+
+      # Publicar o relatório HTML no GitHub Pages
+      - name: Deploy do relatório no GitHub Pages
+        if: always()   # publica o relatório mesmo se houver falhas
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report   # pasta gerada pelo Playwright
+          destination_dir: relatorio-e2e     # subpasta no Pages (opcional)
