@@ -1,19 +1,20 @@
-# Testing
+# CI de Nível 01 - Disparo Manual através de clique
 
+# pipeline só é executada quando disparada manualmente pelo botão "Run Pipeline"
 workflow:
-  name: "Execução Manual"
+  rules:
+    - when: manual
 
-image: node:24
-
+# estágios da pipeline
 stages:
-  - e2e
+  - test
 
+# job de testes end-to-end
 e2e-tests:
-  stage: e2e
-
+  stage: test
+  image: node:24                # imagem com Node.js 24 (já inclui npm)
   script:
-    - npm install -g yarn
-    - yarn
-    - yarn run e2e
-
-  when: manual
+    - npm install -g yarn                     # Instalando Yarn
+    - yarn install                            # Instalando dependências
+    - yarn playwright install --with-deps     # Instalando navegadores do Playwright + dependências de SO
+    - yarn run e2e                            # Executando testes e2e
